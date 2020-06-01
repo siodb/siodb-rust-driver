@@ -1,38 +1,21 @@
-# Rust driver for Siodb
+// Copyright (C) 2019-2020 Siodb GmbH. All rights reserved.
+// Use of this source code is governed by a license that can be found
+// in the LICENSE file.
 
-A simple driver for Siodb written in pure Rust.
+// Siodb lib crate
+mod siodb;
+use crate::siodb::SiodbConn;
 
-## Features
+// Standard
+use std::time::Instant;
 
-- Support of URI
-- Connections to Siodb (TLS, TCP, Unix socket)
-- Authentication to Siodb
-- Query execution
-- DML execution
-
-## Installation
-
-Add the crate dependency with the version you desire into `Cargo.toml`:
-
-```
-[dependencies]
-siodb = "*"
-```
-
-## Quick setup
-
-Start Siodb in a container and get the RSA key for root user locally:
-
-```bash
-docker run -p 127.0.0.1:50000:50000/tcp --name siodb siodb/siodb
-docker exec -it siodb cat /home/siodb/.ssh/id_rsa > ~/root_id_rsa
-```
-
-## Example
-
-```rust
+fn main() -> Result<(), std::io::Error> {
+    // TLS connection (default)
     let uri = "siodbs://root@localhost:50000?identity_file=/home/nico/root_id_rsa";
-
+    // TCP plain text connection
+    //let uri = "siodb://root@localhost:50000?identity_file=/home/nico/root_id_rsa";
+    // Local Unix socket connection
+    //let uri = "siodbu:/run/siodb/siodb.socket?identity_file=/home/siodb/.ssh/id_rsa";
     let mut siodb_conn = SiodbConn::new(&uri).expect(&format!("Error connecting to URI '{}'", uri));
 
     if siodb_conn
@@ -103,6 +86,8 @@ docker exec -it siodb cat /home/siodb/.ssh/id_rsa > ~/root_id_rsa
 
     println!("Affected row(s): {}", siodb_conn.get_affected_row_count());
 
+    let start = Instant::now();
+
     siodb_conn
         .query("select * from test_db.test_table".to_string())
         .expect(&format!("Query error"));
@@ -117,69 +102,14 @@ docker exec -it siodb cat /home/siodb/.ssh/id_rsa > ~/root_id_rsa
         }
     }
 
-    println!("Row(s): {}", siodb_conn.get_row_count());
+    let duration = start.elapsed();
+    println!(
+        "Row(s): {} | Elapsed time: {:?}",
+        siodb_conn.get_row_count(),
+        duration
+    );
 
     siodb_conn.close().unwrap();
-```
 
-## URI
-
-To identify a Siodb resource, the driver use the
-[URI format](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier).
-
-For TLS connection (default):
-
-```
-siodbs://root@localhost:50000?identity_file=/home/siodb/.ssh/id_rsa
-```
-
-For TCP plain text connection:
-
-```
-siodb://root@localhost:50000?identity_file=/home/siodb/.ssh/id_rsa
-```
-
-For Unix socket connection:
-
-```
-siodbu:/run/siodb/siodb.socket?identity_file=/home/siodb/.ssh/id_rsa
-```
-
-The above example will connect you to the localhost with port number `50000`.
-The driver will do the authentication with the Siodb user root and the identity file `/home/siodb/.ssh/id_rsa`.
-
-### Options
-
-- identity_file: the path to the RSA private key.
-- trace: to trace everything within the driver to sdtout.
-
-## Support Siodb
-
-Do you like this project? Tell it by clicking the star 🟊 on the top right of this page ☝☝
-
-## Documentation
-
-We write the Siodb documentation in Markdow and it is available in the folder `docs/users/docs`.
-If you prefer a more user friendly format, the same documentation is
-available online [here]( https://docs.siodb.io).
-
-## Contribution
-
-Please refer to the [Contributing file](CONTRIBUTING.md).
-
-## Support
-
-- Report your issue with Siodb 👉 [here](https://github.com/siodb/siodb/issues/new).
-- Report your issue with the driver 👉 [here](https://github.com/siodb/siodb-rust-driver/issues/new).
-- Ask a question 👉 [here](https://stackoverflow.com/questions/tagged/siodb).
-- Siodb Slack space 👉 [here](https://join.slack.com/t/siodb-squad/shared_invite/zt-e766wbf9-IfH9WiGlUpmRYlwCI_28ng).
-
-## Follow Siodb
-
-- [Twitter](https://twitter.com/Sio_db)
-- [Linkedin](https://www.linkedin.com/company/siodb)
-
-## License
-
-Licensed under [Apache License version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
-
+    Ok(())
+}
