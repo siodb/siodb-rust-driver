@@ -635,7 +635,7 @@ impl SiodbConn {
                             ((date[2] & 0b1110_0000) >> 5) + ((date[3] & 0b0001_1111) << 3),
                             ((date[1] & 0b1110_0000) >> 5) + ((date[2] & 0b0001_1111) << 3),
                         ];
-                        year = unsafe { std::mem::transmute::<[u8; 4], i32>(year_bytes) }.to_be();
+                        year = i32::from_be_bytes(year_bytes);
                         debug(
                             self.trace,
                             &format!(
@@ -652,8 +652,7 @@ impl SiodbConn {
                                 ((time[1] & 0b1111_1110) >> 1) + ((time[2] & 0b0000_0001) << 7),
                                 ((time[0] & 0b1111_1110) >> 1) + ((time[1] & 0b0000_0001) << 7),
                             ];
-                            nano =
-                                unsafe { std::mem::transmute::<[u8; 4], u32>(nano_bytes) }.to_be();
+                            nano = u32::from_be_bytes(nano_bytes);
                             seconds =
                                 ((time[3] & 0b1000_0000) >> 7) + ((time[4] & 0b0001_1111) << 1);
                             minutes =
