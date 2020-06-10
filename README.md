@@ -33,7 +33,7 @@ docker exec -it siodb cat /home/siodb/.ssh/id_rsa > ~/root_id_rsa
 
 [![Deploy to Hidora](https://raw.githubusercontent.com/siodb/siodb-jelastic/master/images/deploy-to-hidora.png)](https://siodb.hidora.com)
 
-No credit card required. Free Trial.
+*No credit card required. Free Trial.
 
 ## Example
 
