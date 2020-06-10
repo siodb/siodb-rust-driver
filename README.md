@@ -19,14 +19,21 @@ Add the crate dependency with the version you desire into `Cargo.toml`:
 siodb = "*"
 ```
 
-## Quick setup
+## Quick start
 
+### Docker
 Start Siodb in a container and get the RSA key for root user locally:
 
 ```bash
 docker run -p 127.0.0.1:50000:50000/tcp --name siodb siodb/siodb
 docker exec -it siodb cat /home/siodb/.ssh/id_rsa > ~/root_id_rsa
 ```
+
+### Cloud
+
+[![Deploy to Hidora](https://raw.githubusercontent.com/siodb/siodb-jelastic/master/images/deploy-to-hidora.png)](https://siodb.hidora.com)
+
+No credit card required. Free Trial.
 
 ## Example
 
