@@ -33,7 +33,7 @@ docker exec -it siodb cat /home/siodb/.ssh/id_rsa > ~/root_id_rsa
 
 [![Deploy to Hidora](https://raw.githubusercontent.com/siodb/siodb-jelastic/master/images/deploy-to-hidora.png)](https://siodb.hidora.com)
 
-*Free Trial. Only requires an email address.*
+*Free Trial. Requires only an email address.*
 
 ## Example
 
@@ -152,7 +152,7 @@ For Unix socket connection:
 siodbu:/run/siodb/siodb.socket?identity_file=/home/siodb/.ssh/id_rsa
 ```
 
-The above example will connect you to the localhost with port number `50000`.
+The above examples will connect you to the localhost with port number `50000`.
 The driver will do the authentication with the Siodb user root and the identity file `/home/siodb/.ssh/id_rsa`.
 
 ### Options
